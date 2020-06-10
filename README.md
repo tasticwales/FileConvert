@@ -1,6 +1,6 @@
 # FileConvert
 
-Simple demonstration console application for converting from CSV to XML or JSON formats.  Conversion from XML to CSV also included as proof of concept.  Really simle database implementation to showcase repository pattern usage.
+Simple demonstration console application for converting from CSV to XML or JSON formats.  Conversion from XML to CSV also included as proof of concept.  Really simple database implementation to showcase repository pattern usage.
 
 .NET Core console application
 
