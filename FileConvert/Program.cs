@@ -56,7 +56,7 @@ namespace FileConvert
                         if(entry.Value.ToLower() == "true")
                         {
                             Console.WriteLine("Usage:");
-                            Console.WriteLine("fileconvert /f = [source file] /tojson|toxml = true");
+                            Console.WriteLine("fileconvert /f = [source file] /tojson|toxml|fromxml = true");
                             Console.WriteLine("Example: fileconvert /f='c:\test.csv' /tojson=true");
                             Console.WriteLine();
                             Console.WriteLine("fileconvert /connectionstring = [database connection string] /readcommand = [stored procedure] /tojson|toxml = true");
