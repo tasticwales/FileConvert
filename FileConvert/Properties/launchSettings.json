@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FileConvert": {
+      "commandName": "Project",
+      "commandLineArgs": "/help=true"
+    }
+  }
+}
