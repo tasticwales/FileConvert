@@ -6,11 +6,13 @@ namespace FileConvert
 {
     class Enums
     {
-        public enum ConvertTo
+        public enum ConversionType
         {
             NotSelected = 1,
-            Json,
-            Xml,
+            ToJson,
+            ToXml,
+            FromJson,
+            FromXml
         }
 
     }

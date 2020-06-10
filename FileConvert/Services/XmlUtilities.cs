@@ -16,6 +16,8 @@ namespace FileConvert.Services
         string ProcessCsvContent(string[] lines, char fieldSplitCharacter);
 
         string Xml2Csv(string sourceFileName, char fieldSplitCharacter);
+
+        string ProcessXmlContent(string xmlContent, char fieldSplitCharacter);
     }
 
 
@@ -49,8 +51,6 @@ namespace FileConvert.Services
         public string Xml2Csv(string sourceFileName, char fieldSplitCharacter)
         {
             string Csv = string.Empty;
-            List<string> headerRow = new List<string>();
-            List<string> rows = new List<string>(); ;
 
 
             if (!string.IsNullOrEmpty(sourceFileName))
@@ -58,46 +58,54 @@ namespace FileConvert.Services
                 if (File.Exists(sourceFileName))
                 {
                     string xmlContent = File.ReadAllText(sourceFileName);
-
-                    XDocument doc = XDocument.Parse(xmlContent);
-
-
-                    foreach (XElement node in doc.Descendants("ROOT"))
-                    {
-                        foreach(XElement innerNode in node.Descendants("row"))
-                        {
-                            string thisRow = string.Empty;
-                            string thisHeaderRow = string.Empty;
-                            headerRow.Clear();
-
-                            foreach(XElement e in innerNode.Elements())
-                            {
-                                if (e.HasElements)
-                                {
-                                    foreach(XElement x in e.Elements())
-                                    {
-                                        thisRow += x.Value + fieldSplitCharacter;
-                                        thisHeaderRow += e.Name.ToString() + "_" + x.Name.ToString() + fieldSplitCharacter;
-                                    }
-                                }
-                                else
-                                {
-                                    thisRow += e.Value + fieldSplitCharacter;
-                                    thisHeaderRow += e.Name.ToString() + fieldSplitCharacter;
-                                }
-                            }
-
-                            rows.Add(thisRow.Trim(fieldSplitCharacter));
-                            headerRow.Insert(0, thisHeaderRow.Trim(fieldSplitCharacter));
-                        }
-                    }
-
-                    Csv = string.Join(Environment.NewLine, headerRow.Concat(rows));
+                    Csv = ProcessXmlContent(xmlContent, fieldSplitCharacter);
                 }
             }
 
             return Csv;
         }
+
+
+        public string ProcessXmlContent(string xmlContent, char fieldSplitCharacter)
+        {
+            List<string> headerRow = new List<string>();
+            List<string> rows = new List<string>(); ;
+
+            XDocument doc = XDocument.Parse(xmlContent);
+
+            foreach (XElement node in doc.Descendants("ROOT"))
+            {
+                foreach (XElement innerNode in node.Descendants("row"))
+                {
+                    string thisRow = string.Empty;
+                    string thisHeaderRow = string.Empty;
+                    headerRow.Clear();
+
+                    foreach (XElement e in innerNode.Elements())
+                    {
+                        if (e.HasElements)
+                        {
+                            foreach (XElement x in e.Elements())
+                            {
+                                thisRow += x.Value + fieldSplitCharacter;
+                                thisHeaderRow += e.Name.ToString() + "_" + x.Name.ToString() + fieldSplitCharacter;
+                            }
+                        }
+                        else
+                        {
+                            thisRow += e.Value + fieldSplitCharacter;
+                            thisHeaderRow += e.Name.ToString() + fieldSplitCharacter;
+                        }
+                    }
+
+                    rows.Add(thisRow.Trim(fieldSplitCharacter));
+                    headerRow.Insert(0, thisHeaderRow.Trim(fieldSplitCharacter));
+                }
+            }
+
+            return string.Join(Environment.NewLine, headerRow.Concat(rows));
+        }
+
 
 
 

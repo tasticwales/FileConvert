@@ -16,6 +16,7 @@ namespace FileConvert
     {
         static async Task Main(string[] args)
         {
+            // really simple / basic method of getting passed arguements
             var arguments = new Dictionary<string, string>();
             foreach (var item in Environment.GetCommandLineArgs())
             {
@@ -44,8 +45,9 @@ namespace FileConvert
             string connectionString = string.Empty;
             string readCommand = string.Empty;
 
-            Enums.ConvertTo conversionType = Enums.ConvertTo.NotSelected;
+            Enums.ConversionType conversionType = Enums.ConversionType.NotSelected;
 
+            // use passed aruements to setup what we are going to do
             foreach (KeyValuePair<string, string> entry in arguments)
             {
                 switch(entry.Key.ToLower())
@@ -74,11 +76,15 @@ namespace FileConvert
                         break;
 
                     case "/tojson":
-                        conversionType = Enums.ConvertTo.Json;
+                        conversionType = Enums.ConversionType.ToJson;
                         break;
 
                     case "/toxml":
-                        conversionType = Enums.ConvertTo.Xml;
+                        conversionType = Enums.ConversionType.ToXml;
+                        break;
+
+                    case "/fromxml":
+                        conversionType = Enums.ConversionType.FromXml;
                         break;
 
                     case "/connectionstring":
@@ -107,30 +113,45 @@ namespace FileConvert
 
             try
             {
-                if (conversionType != Enums.ConvertTo.NotSelected)
+                if (conversionType != Enums.ConversionType.NotSelected)
                 {
                     if (filePath != "")
                     {
-                        if (conversionType == Enums.ConvertTo.Xml)
+                        switch (conversionType)
                         {
-                            convertedBody = await serviceXmlUtilities.Csv2Xml(filePath, ',');
-                        }
-                        else if (conversionType == Enums.ConvertTo.Json)
-                        {
-                            convertedBody = await serviceJsonUtilities.Csv2Json(filePath);
+                            case Enums.ConversionType.ToXml:
+                                convertedBody = await serviceXmlUtilities.Csv2Xml(filePath, ',');
+                                break;
+
+                            case Enums.ConversionType.ToJson:
+                                convertedBody = await serviceJsonUtilities.Csv2Json(filePath);
+                                break;
+
+                            case Enums.ConversionType.FromXml:
+                                convertedBody = serviceXmlUtilities.Xml2Csv(filePath, ',');
+                                break;
                         }
                     }
                     else if (connectionString != "" && readCommand != "")
                     {
+                        // really, really simple example of how content could be retrieved from database and then common
+                        // routines used for the conversion process.  This example simply demonstrates the use of a respository
+                        // to acces the database rather than providing a fully robust solution.
                         string[] raw = await serviceDbExample.GetFromDB(connectionString, readCommand);
 
-                        if (conversionType == Enums.ConvertTo.Xml)
+                        switch (conversionType)
                         {
-                            convertedBody = serviceXmlUtilities.ProcessCsvContent(raw, ',');
-                        }
-                        else if (conversionType == Enums.ConvertTo.Json)
-                        {
-                            convertedBody = serviceJsonUtilities.ProcessJsonContent(raw);
+                            case Enums.ConversionType.ToXml:
+                                convertedBody = serviceXmlUtilities.ProcessCsvContent(raw, ',');
+                                break;
+
+                            case Enums.ConversionType.ToJson:
+                                convertedBody = serviceJsonUtilities.ProcessJsonContent(raw);
+                                break;
+
+                            case Enums.ConversionType.FromXml:
+                                convertedBody = serviceXmlUtilities.ProcessXmlContent(string.Join("",raw), ',');
+                                break;
                         }
                     }
                 }
