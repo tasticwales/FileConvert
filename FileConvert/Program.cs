@@ -57,7 +57,7 @@ namespace FileConvert
                         {
                             Console.WriteLine("Usage:");
                             Console.WriteLine("fileconvert /f = [source file] /tojson|toxml|fromxml = true");
-                            Console.WriteLine("Example: fileconvert /f='c:\test.csv' /tojson=true");
+                            Console.WriteLine("Example: fileconvert /f='c:\\test.csv' /tojson=true");
                             Console.WriteLine();
                             Console.WriteLine("fileconvert /connectionstring = [database connection string] /readcommand = [stored procedure] /tojson|toxml = true");
                             Console.WriteLine("Example: fileconvert /connectionstring='Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=testdb' /readcommand='getcsvlist' /tojson=true");
